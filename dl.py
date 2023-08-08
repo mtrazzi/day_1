@@ -1,5 +1,5 @@
-from transformers import AutoModel, AutoConfig, AutoTokenizer
 import os
+from huggingface_hub import snapshot_download
 
 def download_huggingface_model(model_name, save_dir="."):
     """
@@ -13,20 +13,12 @@ def download_huggingface_model(model_name, save_dir="."):
     # Make sure the save directory exists
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-    
-    # Downloading model weights
-    model = AutoModel.from_pretrained(model_name)
-    model.save_pretrained(save_dir)
 
-    # Downloading model configuration
-    config = AutoConfig.from_pretrained(model_name)
-    config.save_pretrained(save_dir)
-
-    # Downloading tokenizer files
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    tokenizer.save_pretrained(save_dir)
+    # Download the entire model repository to the specified directory
+    snapshot_download(model_name, cache_dir=save_dir, force_download=True, resume_download=False)
 
 if __name__ == "__main__":
-    model_name = "bert-base-uncased"  # Replace with the model name or path of your choice
+    model_name = "TheBloke/Llama-2-7B-GGML"  # Replace with the model name or path of your choice
     save_directory = "./downloaded_model"  # Replace with your preferred save location
     download_huggingface_model(model_name, save_directory)
+
